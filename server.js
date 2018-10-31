@@ -1,5 +1,4 @@
 const express = require('express')
-const path = require('path')
 const passport = require('passport')
 const BnetStrategy = require('passport-bnet').Strategy
 const jwt = require('express-jwt')
@@ -12,6 +11,12 @@ require('dotenv').config()
 
 const HOSTNAME = process.env.HOSTNAME || 'http://localhost'
 const PORT = process.env.PORT || 3000
+let API_URL
+if (PORT === 80) {
+  API_URL = `${HOSTNAME}`
+} else {
+  API_URL = `${HOSTNAME}:${PORT}`
+}
 
 const REGION = 'eu'
 // const BATTLE_NET_URL = `https://${REGION}.battle.net`
@@ -41,7 +46,7 @@ passport.deserializeUser((obj, done) => {
 passport.use(new BnetStrategy({
   clientID: process.env['BNET_CLIENT_ID'],
   clientSecret: process.env['BNET_SECRET'],
-  callbackURL: `${HOSTNAME}:${PORT}/auth/bnet/callback`,
+  callbackURL: `${API_URL}/auth/bnet/callback`,
   scope: 'wow.profile',
   region: REGION
 }, (accessToken, refreshToken, profile, done) => {
@@ -57,7 +62,7 @@ app.get('/auth/bnet/callback', passport.authenticate('bnet', { session: false })
     expiresIn: '7d'
   })
 
-  res.redirect(`${HOSTNAME}:${PORT}/app/#/?token=${encodeURIComponent(token)}`)
+  res.redirect(`${API_URL}/app/#/?token=${encodeURIComponent(token)}`)
 })
 
 app.use(jwt({
@@ -109,5 +114,5 @@ app.get('/api/character/:realm/:name/statistics', async (req, res) => {
 
 app.use('/app', express.static('dist'))
 
-log('Listening @ ', `${HOSTNAME}:${PORT}`)
+log('Listening @ ', `${API_URL}`)
 app.listen(PORT)
