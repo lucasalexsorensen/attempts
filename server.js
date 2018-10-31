@@ -5,12 +5,12 @@ const BnetStrategy = require('passport-bnet').Strategy
 const jwt = require('express-jwt')
 const app = express()
 const jsonwebtoken = require('jsonwebtoken')
-const log = msg => console.log(`[attempts]`, msg)
+const log = (...args) => console.log(`[attempts]`, ...args)
 const axios = require('axios')
 const cors = require('cors')
 require('dotenv').config()
 
-const HOSTNAME = 'http://localhost'
+const HOSTNAME = process.env.HOSTNAME || 'http://localhost'
 const PORT = process.env.PORT || 3000
 
 const REGION = 'eu'
@@ -45,7 +45,7 @@ passport.use(new BnetStrategy({
   scope: 'wow.profile',
   region: REGION
 }, (accessToken, refreshToken, profile, done) => {
-  console.log(accessToken, refreshToken, profile)
+  log('Received OAuth login:', profile)
   return done(null, profile)
 }))
 
@@ -85,7 +85,7 @@ app.use(function (err, req, res, next) {
 })
 
 app.get('/', (req, res) => {
-  res.end('API index')
+  res.redirect('/app')
 })
 
 app.get('/api/characters', async (req, res) => {
@@ -109,4 +109,5 @@ app.get('/api/character/:realm/:name/statistics', async (req, res) => {
 
 app.use('/app', express.static('dist'))
 
+log('Listening @ ', `${HOSTNAME}:${PORT}`)
 app.listen(PORT)

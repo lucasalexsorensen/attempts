@@ -1,9 +1,10 @@
+const API_URL = `${process.env.HOSTNAME}:${process.env.PORT}`
+
 export const apiService = {
+  API_URL,
   fetchCharacters,
   fetchStatistics
 }
-
-const API_URL = 'http://localhost:3000'
 
 async function fetchCharacters () {
   const response = await window.axios.get(`${API_URL}/api/characters`)
