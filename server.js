@@ -12,7 +12,7 @@ require('dotenv').config()
 const HOSTNAME = process.env.HOSTNAME || 'http://localhost'
 const PORT = process.env.PORT || 80
 let API_URL
-if (PORT === 80) {
+if (Number(PORT) === 80) {
   API_URL = `${HOSTNAME}`
 } else {
   API_URL = `${HOSTNAME}:${PORT}`
@@ -43,10 +43,11 @@ passport.deserializeUser((obj, done) => {
   done(null, obj)
 })
 
+console.log('B.net using callback url', `${HOSTNAME}/auth/bnet/callback`)
 passport.use(new BnetStrategy({
   clientID: process.env['BNET_CLIENT_ID'],
   clientSecret: process.env['BNET_SECRET'],
-  callbackURL: `${API_URL}/auth/bnet/callback`,
+  callbackURL: `${HOSTNAME}/auth/bnet/callback`,
   scope: 'wow.profile',
   region: REGION
 }, (accessToken, refreshToken, profile, done) => {

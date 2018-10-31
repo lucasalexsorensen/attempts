@@ -1,7 +1,8 @@
 const HOSTNAME = (typeof process.env.HOSTNAME !== 'undefined') ? process.env.HOSTNAME : 'https://attempts.herokuapp.com'
 const PORT = (typeof process.env.PORT !== 'undefined') ? process.env.PORT : 80
+console.log(process.env.HOSTNAME)
 let API_URL
-if (PORT === 80) {
+if (Number(PORT) === 80) {
   API_URL = `${HOSTNAME}`
 } else {
   API_URL = `${HOSTNAME}:${PORT}`
