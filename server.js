@@ -10,7 +10,7 @@ const cors = require('cors')
 require('dotenv').config()
 
 const HOSTNAME = process.env.HOSTNAME || 'http://localhost'
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 80
 let API_URL
 if (PORT === 80) {
   API_URL = `${HOSTNAME}`
