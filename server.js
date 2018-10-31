@@ -63,7 +63,7 @@ app.get('/auth/bnet/callback', passport.authenticate('bnet', { session: false })
     expiresIn: '7d'
   })
 
-  res.redirect(`${API_URL}/app/#/?token=${encodeURIComponent(token)}`)
+  res.redirect(`${HOSTNAME}/app/#/?token=${encodeURIComponent(token)}`)
 })
 
 app.use(jwt({
