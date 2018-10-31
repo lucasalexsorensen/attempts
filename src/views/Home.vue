@@ -21,7 +21,7 @@
         >Get Characters</b-button>
     </div>
 
-    <b-card v-if="characters.length > 0" header="<b>Counter</b>">
+    <b-card v-if="characters.length > 0">
       <b-input-group prepend="Statistic #">
         <b-form-input v-model="statId"></b-form-input>
         <b-input-group-append>
