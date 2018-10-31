@@ -1,5 +1,5 @@
-const HOSTNAME = process.env.HOSTNAME || 'https://attempts.herokuapp.com'
-const PORT = process.env.PORT || 80
+const HOSTNAME = (typeof process.env.HOSTNAME !== 'undefined') ? process.env.HOSTNAME : 'https://attempts.herokuapp.com'
+const PORT = (typeof process.env.PORT !== 'undefined') ? process.env.PORT : 80
 const API_URL = `${HOSTNAME}:${PORT}`
 
 export const apiService = {
