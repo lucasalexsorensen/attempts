@@ -8,22 +8,22 @@ const jsonwebtoken = require('jsonwebtoken')
 const log = msg => console.log(`[attempts]`, msg)
 const axios = require('axios')
 const cors = require('cors')
+require('dotenv').config()
 
 const HOSTNAME = 'http://localhost'
 const PORT = process.env.PORT || 3000
-const secrets = require(path.join(__dirname, 'secrets.json'))
 
 const REGION = 'eu'
 // const BATTLE_NET_URL = `https://${REGION}.battle.net`
 const BLIZZARD_URL = `https://${REGION}.api.blizzard.com`
 
-if (!secrets || !secrets['BNET_CLIENT_ID'] || !secrets['BNET_SECRET']) {
-  log('No battle.net Oauth credentials found in secrets.json')
+if (!process.env['BNET_CLIENT_ID'] || !process.env['BNET_SECRET']) {
+  log('No battle.net Oauth credentials found in env')
   process.exit()
 }
 
-if (!secrets['JWT_SECRET']) {
-  log('No JWT secret found in secrets.json')
+if (!process.env['JWT_SECRET']) {
+  log('No JWT secret found in env')
   process.exit()
 }
 
@@ -39,8 +39,8 @@ passport.deserializeUser((obj, done) => {
 })
 
 passport.use(new BnetStrategy({
-  clientID: secrets['BNET_CLIENT_ID'],
-  clientSecret: secrets['BNET_SECRET'],
+  clientID: process.env['BNET_CLIENT_ID'],
+  clientSecret: process.env['BNET_SECRET'],
   callbackURL: `${HOSTNAME}:${PORT}/auth/bnet/callback`,
   scope: 'wow.profile',
   region: REGION
@@ -52,7 +52,7 @@ passport.use(new BnetStrategy({
 app.get('/auth/bnet', passport.authenticate('bnet'))
 
 app.get('/auth/bnet/callback', passport.authenticate('bnet', { session: false }), (req, res) => {
-  const token = jsonwebtoken.sign(req.user, secrets['JWT_SECRET'], {
+  const token = jsonwebtoken.sign(req.user, process.env['JWT_SECRET'], {
     issuer: 'attempts',
     expiresIn: '7d'
   })
@@ -61,7 +61,7 @@ app.get('/auth/bnet/callback', passport.authenticate('bnet', { session: false })
 })
 
 app.use(jwt({
-  secret: secrets['JWT_SECRET'],
+  secret: process.env['JWT_SECRET'],
   credentialsRequired: true,
   getToken: (req) => {
     if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {

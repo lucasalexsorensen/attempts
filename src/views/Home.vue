@@ -1,6 +1,10 @@
 <template>
   <div class="home">
-    <a id="logout" href="#" v-on:click="logout()">Logout</a>
+    <div id="logout">
+      <span>{{btag}}</span> |
+      <a href="#" v-on:click="logout()">Logout</a>
+    </div>
+
     <div v-if="characters.length < 1">
       <b-button
         v-if="fetching != true"
@@ -17,7 +21,7 @@
         >Get Characters</b-button>
     </div>
 
-    <b-card v-if="characters.length > 0" header="<b>Characters</b>">
+    <b-card v-if="characters.length > 0" header="<b>Counter</b>">
       <b-input-group prepend="Statistic #">
         <b-form-input v-model="statId"></b-form-input>
         <b-input-group-append>
@@ -41,6 +45,11 @@
 </template>
 
 <style lang="scss">
+.home {
+  width: 60%;
+  margin-left: auto;
+  margin: auto;
+}
 #logout {
   position:absolute;
   top: 2%;
@@ -55,6 +64,9 @@ export default {
     return { statId: 4688 }
   },
   computed: {
+    btag () {
+      return this.$store.state.auth.user.battletag
+    },
     fetching () {
       return this.$store.state.wow.fetching
     },
