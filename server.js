@@ -95,7 +95,6 @@ app.get('/', (req, res) => {
 })
 
 app.get('/api/characters', async (req, res) => {
-  // res.json({ characters: [{ name: 'Dorrough', level: 120 }, { name: 'Søfen', level: 113 }] })
   const characters = await axios.get(`${BLIZZARD_URL}/wow/user/characters`, {
     headers: {
       'Authorization': `Bearer ${req.user.token}`
@@ -105,12 +104,23 @@ app.get('/api/characters', async (req, res) => {
 })
 
 app.get('/api/character/:realm/:name/statistics', async (req, res) => {
-  const statistics = await axios.get(`${BLIZZARD_URL}/wow/character/${req.params.realm}/${req.params.name}?fields=statistics`, {
-    headers: {
-      'Authorization': `Bearer ${req.user.token}`
-    }
-  })
-  res.json(statistics.data)
+  let statistics
+  try {
+    statistics = await axios.get(`${BLIZZARD_URL}/wow/character/${req.params.realm}/${req.params.name}?fields=statistics`, {
+      headers: {
+        'Authorization': `Bearer ${req.user.token}`
+      }
+    })
+    statistics = statistics.data
+  } catch (ex) {
+    log(ex)
+    statistics = null
+  }
+  if (typeof statistics === 'object') {
+    res.json(statistics)
+  } else {
+    res.status(500).end('server error')
+  }
 })
 
 app.use('/app', express.static('dist'))

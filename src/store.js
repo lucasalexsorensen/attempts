@@ -6,11 +6,14 @@ import { apiService } from './services'
 Vue.use(Vuex)
 
 const initialState = {
+  ui: {
+    counting: false
+  },
   auth: {
     user: null
   },
   wow: {
-    characters: [],
+    characters: JSON.parse(localStorage.getItem('characters')) || [],
     fetching: false
   }
 }
@@ -23,6 +26,12 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    startCounting ({ commit }) {
+      commit('startCounting')
+    },
+    stopCounting ({ commit }) {
+      commit('stopCounting')
+    },
     async fetchCharacters ({ dispatch, commit }) {
       commit('characterRequest')
       const characters = await apiService.fetchCharacters()
@@ -31,7 +40,11 @@ export default new Vuex.Store({
     async countStatistics ({ dispatch, commit }, { realm, name, statId }) {
       commit('statisticsRequest')
       const statistics = await apiService.fetchStatistics(name, realm)
-      commit('statisticsSuccess', { statId, statistics })
+      if (typeof statistics === 'object') {
+        commit('statisticsSuccess', { statId, statistics })
+      } else {
+        commit('statisticsFailure')
+      }
     },
     login ({ commit }, { token }) {
       commit('login', { token })
@@ -41,6 +54,12 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    startCounting (state) {
+      state.ui.counting = true
+    },
+    stopCounting (state) {
+      state.ui.counting = false
+    },
     statisticsRequest (state) {
       state.wow.fetching = true
     },
@@ -61,6 +80,7 @@ export default new Vuex.Store({
     },
     characterSuccess (state, characters) {
       state.wow.characters = characters.sort((a, b) => a.level < b.level).map(char => Object.assign({ attempts: -1 }, char))
+      localStorage.setItem('characters', JSON.stringify(state.wow.characters))
       state.wow.fetching = false
     },
     characterFailure (state) {

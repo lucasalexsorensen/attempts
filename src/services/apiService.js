@@ -20,6 +20,13 @@ async function fetchCharacters () {
 }
 
 async function fetchStatistics (name, realm) {
-  const response = await window.axios.get(`${API_URL}/api/character/${realm}/${name}/statistics`)
-  return response.data
+  let response
+  try {
+    response = await window.axios.get(`${API_URL}/api/character/${realm}/${name}/statistics`)
+    response = response.data
+  } catch (ex) {
+    console.log(ex)
+    response = null
+  }
+  return response
 }

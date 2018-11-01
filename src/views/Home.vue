@@ -21,34 +21,56 @@
         >Get Characters</b-button>
     </div>
 
-    <b-card v-if="characters.length > 0">
-      <b-input-group prepend="Statistic #">
-        <b-form-input v-model="statId"></b-form-input>
-        <b-input-group-append>
-          <b-btn v-on:click="fetchAll()" variant="primary">Count attempts</b-btn>
-        </b-input-group-append>
-      </b-input-group>
+    <b-card id="counter" v-if="characters.length > 0">
+      <v-multiselect
+        placeholder="Select statistics"
+        v-model="selected"
+        :options="statistics"
+        label="name"
+        :multiple="true"
+        track-by="name">
+          <template slot="singleLabel" slot-scope="{ option }">
+            <strong>{{ option.name }}</strong>
+          </template>
+      </v-multiselect>
       <br>
-      <h4>Total count: {{totalCount}}</h4>
-      <br>
-      <b-progress v-bind:value="countedCharactersPercentage" variant="info" striped="striped"></b-progress>
+      <b-button-group>
+        <b-button v-on:click="countAll()" :disabled="selected.length <= 0" variant="primary">Count attempts</b-button>
+        <b-button v-on:click="refreshAll()" :disabled="selected.length <= 0"><a-icon icon="sync"></a-icon></b-button>
+      </b-button-group>
 
-      <br><br>
-      <b-list-group>
-        <b-list-group-item href="#" v-for="char of characters" v-bind:key="char.lastModified" class="d-flex justify-content-between align-items-center">
-          {{ char.name }}-{{ char.realm }}
-          <b-badge variant="primary" v-if="char.attempts > -1">{{char.attempts}}</b-badge>
-        </b-list-group-item>
-      </b-list-group>
+      <div v-if="counting">
+        <br>
+        <h4>Total count: {{totalCount}}</h4>
+        <br>
+        <b-progress height="30px" :max="characters.length" variant="info" striped="striped">
+          <b-progress-bar :value="countedCharacters.length" >
+            {{countedCharacters.length}} / {{characters.length}}
+          </b-progress-bar>
+        </b-progress>
+
+        <br><br>
+        <b-list-group>
+          <b-list-group-item href="#" v-for="char of characters" v-bind:key="char.lastModified" class="d-flex justify-content-between align-items-center">
+            {{ char.name }}-{{ char.realm }}
+            <b-badge variant="primary" v-if="char.attempts > -1">{{char.attempts}}</b-badge>
+          </b-list-group-item>
+        </b-list-group>
+      </div>
     </b-card>
   </div>
 </template>
 
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style lang="scss">
 .home {
-  width: 60%;
+  min-width: 400px;
+  width: 80%;
   margin-left: auto;
   margin: auto;
+}
+#counter {
+  padding-bottom: 4%;
 }
 #logout {
   position:absolute;
@@ -58,12 +80,20 @@
 </style>
 
 <script>
+import STATISTICS from '../../all-statistics.json'
+
 export default {
   name: 'home',
   data () {
-    return { statId: 4688 }
+    return {
+      selected: [],
+      statistics: STATISTICS
+    }
   },
   computed: {
+    counting () {
+      return this.$store.state.ui.counting
+    },
     btag () {
       return this.$store.state.auth.user.battletag
     },
@@ -73,9 +103,9 @@ export default {
     characters () {
       return this.$store.getters.characters(80)
     },
-    countedCharactersPercentage () {
+    countedCharacters () {
       const allChars = this.$store.getters.characters(80)
-      return Math.round((allChars.filter(char => char.attempts > -1).length / allChars.length) * 100)
+      return allChars.filter(char => char.attempts > -1)
     },
     totalCount () {
       return this.$store.getters.characters(80).reduce((accum, current) => {
@@ -91,11 +121,16 @@ export default {
     fetchCharacters () {
       this.$store.dispatch('fetchCharacters')
     },
-    fetchAll () {
+    countAll () {
+      const ids = this.selected.map(stat => Number(stat.id))
       const chars = this.$store.getters.characters(80)
+      this.$store.dispatch('startCounting')
       for (let char of chars) {
-        this.$store.dispatch('countStatistics', { realm: char.realm, name: char.name, statId: Number(this.statId) })
+        this.$store.dispatch('countStatistics', { realm: char.realm, name: char.name, statId: ids[0] })
       }
+    },
+    refreshAll () {
+      console.log('hello world')
     },
     logout () {
       console.log('LOGGING OUT')
