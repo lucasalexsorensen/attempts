@@ -1,75 +1,9 @@
 {
   "name": "attempts",
   "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "start": "node server.js",
-    "postinstall": "vue-cli-service build",
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "test:e2e": "vue-cli-service test:e2e",
-    "test:unit": "vue-cli-service test:unit"
-  },
-  "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.7",
-    "@fortawesome/free-solid-svg-icons": "^5.4.2",
-    "@fortawesome/vue-fontawesome": "^0.1.2",
-    "@vue/ui": "^0.5.6",
-    "axios": "^0.18.0",
-    "body-parser": "^1.18.3",
-    "bootstrap-vue": "^2.0.0-rc.11",
-    "cors": "^2.8.4",
-    "dotenv": "^6.1.0",
-    "dotenv-webpack": "^1.5.7",
-    "express": "^4.16.4",
-    "express-jwt": "^5.3.1",
-    "jsonwebtoken": "^8.3.0",
-    "passport": "^0.4.0",
-    "passport-bnet": "^2.0.0",
-    "register-service-worker": "^1.0.0",
-    "vue": "^2.5.17",
-    "vue-multiselect": "^2.1.3",
-    "vue-router": "^3.0.1",
-    "vuex": "^3.0.1"
-  },
-  "devDependencies": {
-    "@cypress/webpack-preprocessor": "^3.0.0",
-    "@vue/cli-plugin-babel": "^3.1.0",
-    "@vue/cli-plugin-e2e-cypress": "^3.1.0",
-    "@vue/cli-plugin-eslint": "^3.1.0",
-    "@vue/cli-plugin-pwa": "^3.1.0",
-    "@vue/cli-plugin-unit-mocha": "^3.1.0",
-    "@vue/cli-service": "^3.1.0",
-    "@vue/eslint-config-standard": "^3.0.5",
-    "@vue/test-utils": "^1.0.0-beta.20",
-    "chai": "^4.1.2",
-    "node-sass": "^4.9.0",
-    "sass-loader": "^7.0.1",
-    "vue-template-compiler": "^2.5.17"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "@vue/standard"
-    ],
-    "rules": {},
-    "parserOptions": {
-      "parser": "babel-eslint"
-    }
-  },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not ie <= 8"
-  ]
+  "description": "Account-wide mount attempt (statistics) tracking using B.net statistics API.",
+  "main": "index.js",
+  "repository": "git@github.com:lucasalexsorensen/attempts.git",
+  "author": "Lucas Sorensen <lucas.alex.sorensen@gmail.com>",
+  "license": "MIT"
 }
