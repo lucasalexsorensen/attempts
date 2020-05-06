@@ -25,7 +25,7 @@ app.get('/bnet/callback', async (req, res) => {
     const running = await queueHasRunningJobsForSub(crawlQueue, identity.sub)
     if (!running) {
       await crawlQueue.add({
-        sub: req.user.sub
+        sub: identity.sub
       })
     }
 
