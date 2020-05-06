@@ -9,7 +9,7 @@
   "scripts": {
     "start": "npx ts-node src/index.ts",
     "build": "npx tsc",
-    "build-client": "cd frontend && yarn build && cd ..",
+    "build-client": "cd frontend && yarn install && yarn build && cd ..",
     "postinstall": "yarn build && yarn build-client"
   },
   "dependencies": {
