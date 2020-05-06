@@ -127,9 +127,7 @@ export class BattleNetService {
   }
 
   buildRedirectUrl () {
-    const host = process.env.HOSTNAME || 'http://localhost'
-    const port = process.env.PORT || 8000
-    return `${host}:${port}/auth/bnet/callback`
+    return `${process.env.SELF_URL}/auth/bnet/callback`
   }
 
   buildNamespace (type: BattleNetNamespace, identity: Identity) {
