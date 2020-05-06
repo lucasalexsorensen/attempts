@@ -8,8 +8,9 @@
   "license": "MIT",
   "scripts": {
     "start": "npx ts-node src/index.ts",
-    "build": "cd frontend && yarn build && cd .. && npx tsc",
-    "postinstall": "yarn build"
+    "build": "npx tsc",
+    "build-client": "cd frontend && yarn build && cd ..",
+    "postinstall": "yarn build && yarn build-client"
   },
   "dependencies": {
     "axios": "^0.19.2",
