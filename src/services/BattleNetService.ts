@@ -69,7 +69,7 @@ export class BattleNetService {
     })
   }
 
-  async handleBnetCallback (req, res): Promise<Identity | null> {
+  async handleBnetCallback (req, res): Promise<{ identity: Identity, isNew: boolean } | null> {
     const { state, code } = req.query
     const region = (state as string).split('|')[0] as BattleNetRegion
     
@@ -87,7 +87,7 @@ export class BattleNetService {
         existing.idToken = result.id_token
         existing.exp = decoded.exp
         await existing.save()
-        return existing
+        return { identity: existing, isNew: false }
       } else {
         const identity = new Identity()
         identity.sub = decoded.sub
@@ -98,7 +98,7 @@ export class BattleNetService {
         identity.idToken = result.id_token
   
         await identity.save()
-        return identity
+        return { identity, isNew: true }
       }
     } catch (e) {
       console.log('OAuth failure', e)
@@ -216,7 +216,7 @@ export class BattleNetService {
     const { sum } = await getRepository(Statistic)
       .createQueryBuilder('statistic')
       .select('SUM(quantity)', 'sum')
-      .where('statistic.achievementId = :achId', { achId: achievementId})
+      .where('"achievementId" = :achId AND "identitySub" = :identitySub', { achId: achievementId, identitySub: identity.sub })
       .getRawOne()
     return {
       count: sum

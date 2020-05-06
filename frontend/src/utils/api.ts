@@ -5,7 +5,7 @@ export async function get (path: string) {
   try {
     const response = await axios.get(`${process.env.REACT_APP_API_URL}${path}`, {
       headers: {
-        authorization: `Bearer ${localStorage.getItem('jwt')}`
+        'x-attempts-token': `Bearer ${localStorage.getItem('jwt')}`
       }
     })
 
