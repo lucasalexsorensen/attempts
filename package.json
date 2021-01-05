@@ -13,7 +13,7 @@
     "postinstall": "yarn build && yarn build-client"
   },
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "bluebird": "^3.7.2",
     "bull": "^3.13.0",
     "bull-board": "^0.7.0",
